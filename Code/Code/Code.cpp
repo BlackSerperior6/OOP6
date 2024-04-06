@@ -35,6 +35,10 @@ int main()
 
 	cout << endl << list << endl << endl;
 
+	cout << "Возводим список в квадрат:";
+	list *= list;
+	cout << endl << list << endl << endl;
+
 	Iterator current = list.first();
 
 	cout << "Первый элемент списка: " << *current << endl << endl;

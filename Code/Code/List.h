@@ -255,16 +255,14 @@ public:
 
     int operator()() { return Lenght; }
 
-    List operator*(List& anotherList)
+    List& operator*=(List& anotherList)
     {
         int SmallerLenght = (anotherList.Lenght > Lenght) ? Lenght : anotherList.Lenght;
 
-        List temp;
-
         for (int i = 0; i < SmallerLenght; i++)
-            temp[i] = (*this)[i] * anotherList[i];
+            (*this)[i] *= anotherList[i];
 
-        return temp;
+        return *this;
     }
 
     void Clear()
