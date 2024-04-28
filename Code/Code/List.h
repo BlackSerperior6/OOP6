@@ -4,38 +4,38 @@
 
 using namespace std;
 
-struct Node 
+struct Node //Структура элемента списка
 {
-	Node* next = nullptr;
-	Node* prev = nullptr;
-	int Data;
+	Node* next = nullptr; //Указатель на следующий элемент
+	Node* prev = nullptr; //Указатель на предыдущий элемент
+	int Data; //Данные элемента
 };
 
-class Iterator
+class Iterator //Класс итератор
 {
 public:
 
-    friend class List;
+    friend class List; //Делаем класс списка другом класса итератора
 
-    Iterator() { Element = nullptr; }
+    Iterator() { Element = nullptr; } //Конструктор
 
-    Iterator& operator=(Iterator& anotherIterator) 
+    Iterator& operator=(Iterator& anotherIterator)  //Оператор присваивания
     {
         Element = anotherIterator.Element;
         return *this;
     }
 
-    bool operator==(Iterator& anotherIterator)
+    bool operator==(Iterator& anotherIterator) //Оператор сравнения
     {
         return Element == anotherIterator.Element;
     }
 
-    bool operator!=(Iterator& anotherIterator)
+    bool operator!=(Iterator& anotherIterator) //Оператор неравенства
     {
         return Element != anotherIterator.Element;
     }
 
-    Iterator& operator+=(int number)
+    Iterator& operator+=(int number) //Оператор сложения (сдвиг вперед)
     {
         for (int i = 0; i < number && Element != nullptr; i++)
             Element = Element->next;
@@ -43,7 +43,7 @@ public:
         return *this;
     }
 
-    Iterator& operator-=(int number)
+    Iterator& operator-=(int number) //Оператор вычитания (сдвиг назад)
     {
         for (int i = 0; i < number && Element != nullptr; i++)
             Element = Element->prev;
@@ -51,7 +51,7 @@ public:
         return *this;
     }
 
-    Iterator& operator++() 
+    Iterator& operator++()  //Сдвиг вперед на один
     {
         if (Element != nullptr)
             Element = Element->next;
@@ -59,7 +59,7 @@ public:
         return *this;
     }
 
-    Iterator& operator--()
+    Iterator& operator--() //Сдвиг назад на один
     {
         if (Element != nullptr)
             Element = Element->prev;
@@ -67,7 +67,8 @@ public:
         return *this;
     }
 
-    Iterator operator++(int)
+    //Постфиксные варианты
+    Iterator operator++(int) 
     {
         Iterator tmp;
 
@@ -91,10 +92,10 @@ public:
         return tmp;
     }
 
-    int& operator*() { return Element->Data; }
+    int& operator*() { return Element->Data; } //Оператор разадресации 
 
 private:
-    Node* Element;
+    Node* Element; //Элемент списка, хранящийся в итераторе
 };
 
 
@@ -102,15 +103,17 @@ class List
 {
 public:
 
+    //Конструктор без параметров
     List() { head = nullptr, tail = nullptr, Lenght = 0, beg.Element = head, end.Element = tail; }
 
+    //Диструктор. При уничтожении списка очищается
     ~List() { Clear(); }
 
-    Iterator& first() { return beg; }
+    Iterator& first() { return beg; } //Получает первый итератор
 
-    Iterator& last() { return end; }
+    Iterator& last() { return end; } //Получает последний итератор
 
-    void Push_Back(int element)
+    void Push_Back(int element) //Метод добавления в конец списка
     {
         Node* new_node = new Node;
         new_node->Data = element;
@@ -133,7 +136,7 @@ public:
         Lenght++;
     }
 
-    void Push_Front(int element)
+    void Push_Front(int element) //Метод добавления в начало списка
     {
         Node* new_node = new Node;
         new_node->Data = element;
@@ -156,7 +159,7 @@ public:
         Lenght++;
     }
 
-    void Pop_Back() 
+    void Pop_Back() //Метод удаления последнего элемента списка
     {
         if (head == nullptr)
         {
@@ -188,7 +191,7 @@ public:
         Lenght--;
     }
 
-    void Pop_Front()
+    void Pop_Front() //Метод удаления первого элемента списка
     {
         if (head == nullptr)
         {
@@ -218,7 +221,7 @@ public:
         Lenght--;
     }
 
-    int& operator[](int index)
+    int& operator[](int index) //Оператор доступа по индексу
     {
         if (index >= Lenght|| index < 0)
         {
@@ -235,7 +238,7 @@ public:
         return current->Data;
     }
 
-    List& operator=(List& anotherList)
+    List& operator=(List& anotherList) //Оператор присваивания
     {
         if (this != &anotherList)
         {
@@ -253,9 +256,9 @@ public:
         return *this;
     }
 
-    int operator()() { return Lenght; }
+    int operator()() { return Lenght; } //Оператор получения размера списка
 
-    List& operator*=(List& anotherList)
+    List& operator*=(List& anotherList) //Оператор умножения элементов двух списков
     {
         int SmallerLenght = (anotherList.Lenght > Lenght) ? Lenght : anotherList.Lenght;
 
@@ -265,7 +268,7 @@ public:
         return *this;
     }
 
-    void Clear()
+    void Clear() //Метод очистки списка
     {
         while (head != nullptr)
         {
@@ -279,22 +282,24 @@ public:
         Lenght = 0;
     }
 
+    //Операторы потокового ввода вывода
     friend istream& operator>>(istream& stream, List& list);
-
     friend ostream& operator<<(ostream& stream, List& list);
 
 private:
 
+    //Голова и хвост списка
 	Node* head;
 	Node* tail;
 
+    //Итераторы начала и конца списка
     Iterator beg;
     Iterator end;
 
-	int Lenght;
+	int Lenght; //Длина списка
 };
 
-istream& operator>>(istream& stream, List& list) 
+istream& operator>>(istream& stream, List& list) //Оператор потокового ввода
 {
     list.Clear();
 
@@ -312,7 +317,7 @@ istream& operator>>(istream& stream, List& list)
     return stream;
 }
 
-ostream& operator<<(ostream& stream, List& list)
+ostream& operator<<(ostream& stream, List& list) //Оператор потокового вывода
 {
     if (list.Lenght == 0)
     {
@@ -333,7 +338,5 @@ ostream& operator<<(ostream& stream, List& list)
         }
     }
 
-    return stream;
-    
+    return stream; 
 }
-
